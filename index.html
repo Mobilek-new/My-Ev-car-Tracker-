@@ -329,14 +329,43 @@
   .mascot-box{ justify-content:center; }
   .mascot-speech{ max-width:100%; text-align:center; }
 }
+  .header-container {
+  background: linear-gradient(180deg, #66bb6a 50%, #f4f4f9 50%); /* สีเขียวครึ่งบน พื้นหลังครึ่งล่าง */
+  padding: 20px;
+  padding-bottom: 40px; /* เว้นระยะให้การ์ดนูนออกมา */
+}
+
+.user-greeting { color: white; font-size: 1.1rem; margin-bottom: 15px; }
+
+.car-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* ทำให้การ์ดดูลอยตัว */
+  margin: 0 10px;
+}
+
+.car-img { width: 120px; height: auto; }
+.car-info h2 { margin: 0; font-size: 1.5rem; }
+.car-info p { margin: 0; color: #666; }
+  }
+  
 </style>
 </head>
 <body>
 
-<header>
-  <div class="car-avatar">🚗</div>
-  <p class="car-title">รถของ โมบายล์ Geely EX2</p>
-  <p class="sub-title">⚡ บันทึกรายจ่ายการชาร์จไฟฟ้าและค่าใช้จ่ายรถยนต์</p>
+<header class="user-header">
+  <div class="user-greeting">👤 สวัสดี, คุณพลชัย</div>
+  <div class="car-card">
+    <div class="car-info">
+      <h2>Geely EX2</h2>
+      <p>Tracker EV</p>
+    </div>
+    <img src="car-image.png" alt="Car" class="car-image">
+  </div>
 </header>
 
 <nav>
