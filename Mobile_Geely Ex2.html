@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บันทึกการชาร์จ - Geely EX2</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4f46e5">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --primary:#4f46e5;
+    --primary-dark:#4338ca;
+    --secondary:#06b6d4;
+    --ac-color:#3b82f6;
+    --dc-color:#10b981;
+    --ins-color:#8b5cf6;
+    --pay-color:#f59e0b;
+    --bg:#eef1fb;
+    --card:#ffffff;
+    --text:#1e2333;
+    --muted:#767e94;
+    --border:#e6e9f5;
+    --shadow: 0 4px 16px rgba(79,70,229,.07), 0 1px 3px rgba(0,0,0,.03);
+    --shadow-hover: 0 8px 24px rgba(79,70,229,.12);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Prompt','Segoe UI',Tahoma,sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(79,70,229,.06), transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(6,182,212,.06), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    min-height:100vh;
+  }
+
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);
+    padding:28px 24px 36px;
+    text-align:center;
+    border-radius:0 0 28px 28px;
+    box-shadow:0 6px 20px rgba(79,70,229,.25);
+    position:relative;
+    overflow:hidden;
+  }
+  header::before{
+    content:'';
+    position:absolute;
+    top:-40px;right:-40px;
+    width:140px;height:140px;
+    background:rgba(255,255,255,.12);
+    border-radius:50%;
+  }
+  header::after{
+    content:'';
+    position:absolute;
+    bottom:-30px;left:-30px;
+    width:110px;height:110px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+  }
+  .car-avatar{
+    width:56px;height:56px;
+    background:rgba(255,255,255,.2);
+    border:2px solid rgba(255,255,255,.5);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+    margin:0 auto 10px;
+    backdrop-filter:blur(4px);
+  }
+  header .car-title{font-size:21px;font-weight:700;margin:0;color:white;position:relative;z-index:1;}
+  header .sub-title{font-size:13px;color:rgba(255,255,255,.9);margin-top:6px;position:relative;z-index:1;}
+
+  /* NAV */
+  nav{
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+    padding:16px 24px;background:transparent;
+    position:sticky;top:0;z-index:20;
+  }
+  nav button{
+    background:var(--card);border:1px solid var(--border);color:var(--muted);
+    padding:10px 20px;border-radius:999px;cursor:pointer;font-size:13.5px;font-weight:500;
+    transition:.25s ease;box-shadow:0 2px 8px rgba(0,0,0,.04);
+    font-family:'Prompt',sans-serif;
+  }
+  nav button:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);color:var(--primary);}
+  nav button.active{
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    color:white;border-color:transparent;
+    box-shadow:0 4px 14px rgba(79,70,229,.35);
+  }
+
+  main{padding:8px 24px 32px;max-width:1200px;margin:0 auto;}
+  .tab{display:none;}
+  .tab.active{display:block;animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:20px;
+    padding:22px;margin-bottom:18px;box-shadow:var(--shadow);
+    transition:.25s ease;
+  }
+  .card:hover{box-shadow:var(--shadow-hover);}
+  .card h2{margin-top:0;font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px;}
+
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500;}
+  input,select{
+    width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);
+    background:#f8f9fd;color:var(--text);font-size:14px;font-family:'Prompt',sans-serif;
+    transition:.2s;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--primary);background:white;box-shadow:0 0 0 4px rgba(79,70,229,.08);}
+
+  .btn{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:white;border:none;padding:12px 24px;border-radius:999px;cursor:pointer;
+    font-size:14px;font-weight:600;margin-top:14px;transition:.25s;
+    font-family:'Prompt',sans-serif;
+    box-shadow:0 4px 12px rgba(79,70,229,.25);
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(79,70,229,.35);}
+  .btn.danger{background:linear-gradient(135deg,#ef4444,#dc2626);padding:7px 16px;font-size:12px;box-shadow:0 3px 10px rgba(239,68,68,.25);}
+  .btn.dc{background:linear-gradient(135deg,var(--dc-color),#059669);box-shadow:0 4px 12px rgba(16,185,129,.25);}
+  .btn.ins{background:linear-gradient(135deg,var(--ins-color),#7c3aed);box-shadow:0 4px 12px rgba(139,92,246,.25);}
+  .btn.pay{background:linear-gradient(135deg,var(--pay-color),#d97706);box-shadow:0 4px 12px rgba(245,158,11,.25);}
+
+  .type-toggle{display:flex;gap:10px;margin-bottom:18px;}
+  .type-toggle button{
+    flex:1;padding:18px;border-radius:16px;border:2px solid var(--border);
+    background:#f8f9fd;color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;
+    transition:.25s;font-family:'Prompt',sans-serif;
+  }
+  .type-toggle button:hover{transform:translateY(-2px);}
+  .type-toggle button.selected-ac{border-color:var(--ac-color);background:rgba(59,130,246,.08);color:var(--ac-color);box-shadow:0 4px 14px rgba(59,130,246,.15);}
+  .type-toggle button.selected-dc{border-color:var(--dc-color);background:rgba(16,185,129,.08);color:var(--dc-color);box-shadow:0 4px 14px rgba(16,185,129,.15);}
+
+  .field-section{display:none;}
+  .field-section.show{display:block;animation:fadeIn .3s ease;}
+
+  .preview{
+    margin-top:14px;padding:16px;background:linear-gradient(135deg,#f0f4ff,#f0fdfa);
+    border-radius:14px;border:1.5px dashed var(--primary);font-size:14px;color:var(--text);
+  }
+
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px;}
+  .summary-box{
+    background:var(--card);border:1px solid var(--border);border-radius:18px;
+    padding:20px 16px;text-align:center;box-shadow:var(--shadow);
+    transition:.25s;position:relative;
+  }
+  .summary-box:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);}
+  .summary-box .icon-circle{
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;margin:0 auto 10px;
+  }
+  .summary-box .value{font-size:22px;font-weight:700;margin:4px 0;color:var(--text);}
+  .summary-box .label{font-size:12.5px;color:var(--muted);}
+  .summary-box.highlight{background:linear-gradient(135deg,var(--primary),var(--secondary));}
+  .summary-box.highlight .value,.summary-box.highlight .label{color:white;}
+  .summary-box.highlight .icon-circle{background:rgba(255,255,255,.25);}
+
+  .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:800px){.charts-grid{grid-template-columns:1fr;}}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{padding:12px 10px;text-align:left;border-bottom:1px solid var(--border);}
+  th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.3px;}
+  tr:hover td{background:#f8f9fd;}
+  .badge{padding:5px 14px;border-radius:999px;font-size:12px;font-weight:600;}
+  .badge.ac{background:rgba(59,130,246,.12);color:var(--ac-color);}
+  .badge.dc{background:rgba(16,185,129,.12);color:var(--dc-color);}
+  .badge.paid{background:rgba(245,158,11,.12);color:#b45309;}
+
+  .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+  .filter-row select,.filter-row input{width:auto;min-width:140px;}
+  .empty{text-align:center;color:var(--muted);padding:36px;}
+  .note{color:var(--muted);font-size:13px;margin-top:10px;}
+  .progress-wrap{background:#f1f3fb;border-radius:999px;height:12px;overflow:hidden;margin-top:12px;}
+  .progress-bar{background:linear-gradient(90deg,var(--pay-color),#fbbf24);height:100%;border-radius:999px;transition:.4s;}
+  hr.sep{border:none;border-top:1px dashed var(--border);margin:22px 0;}
+
+.mascot-box{
+  display:flex;
+  align-items:flex-end;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:22px;
+}
+
+.mascot-car{
+  position:relative;
+  width:180px;
+  height:112px;
+  flex-shrink:0;
+  animation:mascotFloat 3s ease-in-out infinite;
+}
+
+@keyframes mascotFloat{
+  0%,100%{ transform:translateY(0) rotate(0deg); }
+  50%{ transform:translateY(-9px) rotate(-1.5deg); }
+}
+
+.mascot-lowerbody{
+  position:absolute;
+  bottom:18px; left:0;
+  width:180px; height:42px;
+  background:linear-gradient(160deg,#5b9cff,#3d83ed);
+  border-radius:22px;
+  box-shadow:0 5px 0 #2d72d4;
+}
+
+.mascot-cabin{
+  position:absolute;
+  bottom:46px; left:32px;
+  width:116px; height:44px;
+  background:linear-gradient(160deg,#6ea9ff,#4a8ff2);
+  border-radius:28px 28px 10px 10px;
+  box-shadow:0 3px 0 #3679dd;
+}
+
+.mascot-eye{
+  position:absolute;
+  top:16px;
+  width:14px; height:16px;
+  background:#22304a;
+  border-radius:50%;
+  animation:mascotBlink 4s infinite;
+}
+.mascot-eye.left{ left:24px; }
+.mascot-eye.right{ right:24px; }
+
+@keyframes mascotBlink{
+  0%,92%,100%{ transform:scaleY(1); }
+  95%{ transform:scaleY(.1); }
+}
+
+.mascot-cheek{
+  position:absolute;
+  top:28px;
+  width:14px; height:8px;
+  background:#ffb1c8;
+  border-radius:50%;
+  opacity:.8;
+}
+.mascot-cheek.left{ left:8px; }
+.mascot-cheek.right{ right:8px; }
+
+.mascot-mouth{
+  position:absolute;
+  bottom:8px; left:50%;
+  transform:translateX(-50%);
+  width:22px; height:11px;
+  border-bottom:4px solid #22304a;
+  border-radius:0 0 20px 20px;
+}
+
+.mascot-wheel{
+  position:absolute;
+  bottom:0;
+  width:32px; height:32px;
+  background:#2b3446;
+  border-radius:50%;
+  box-shadow:0 0 0 5px #56618099 inset;
+}
+.mascot-wheel.left{ left:24px; }
+.mascot-wheel.right{ right:24px; }
+
+.mascot-bolt{
+  position:absolute;
+  top:-6px; right:6px;
+  font-size:22px;
+  animation:mascotZap 1.4s ease-in-out infinite;
+}
+
+@keyframes mascotZap{
+  0%,100%{ transform:scale(1) rotate(0deg); opacity:1; }
+  50%{ transform:scale(1.25) rotate(-8deg); opacity:.7; }
+}
+
+.mascot-speech{
+  position:relative;
+  background:white;
+  border:2px solid #dceafb;
+  border-radius:18px;
+  padding:14px 18px;
+  font-size:14px;
+  font-weight:500;
+  color:#365276;
+  box-shadow:0 5px 0 #d5e8fb;
+  max-width:260px;
+  margin-bottom:24px;
+  animation:mascotFadeIn .4s ease;
+}
+
+.mascot-speech::before{
+  content:'';
+  position:absolute;
+  left:-10px; bottom:14px;
+  width:0; height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:10px solid #dceafb;
+}
+.mascot-speech::after{
+  content:'';
+  position:absolute;
+  left:-8px; bottom:14px;
+  width:0; height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:10px solid white;
+}
+
+@keyframes mascotFadeIn{
+  from{ opacity:0; transform:translateY(6px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+@media(max-width:600px){
+  .mascot-box{ justify-content:center; }
+  .mascot-speech{ max-width:100%; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="car-avatar">🚗</div>
+  <p class="car-title">รถของ โมบายล์ Geely EX2</p>
+  <p class="sub-title">⚡ บันทึกรายจ่ายการชาร์จไฟฟ้าและค่าใช้จ่ายรถยนต์</p>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+  <button class="tab-btn" data-tab="record">➕ บันทึกการชาร์จ</button>
+  <button class="tab-btn" data-tab="monthly">📅 สรุปรายเดือน</button>
+  <button class="tab-btn" data-tab="totalcost">💰 สรุปค่าใช้จ่ายทั้งหมด</button>
+  <button class="tab-btn" data-tab="history">📋 ประวัติทั้งหมด</button>
+  <button class="tab-btn" data-tab="settings">⚙️ ตั้งค่า</button>
+</nav>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <div class="tab active" id="dashboard">
+  <div class="mascot-box">
+    <div class="mascot-car">
+      <div class="mascot-lowerbody"></div>
+      <div class="mascot-cabin">
+        <div class="mascot-eye left"></div>
+        <div class="mascot-eye right"></div>
+        <div class="mascot-cheek left"></div>
+        <div class="mascot-cheek right"></div>
+        <div class="mascot-mouth"></div>
+      </div>
+      <div class="mascot-wheel left"></div>
+      <div class="mascot-wheel right"></div>
+      <div class="mascot-bolt">⚡</div>
+    </div>
+    <div class="mascot-speech" id="mascotSpeech">สวัสดี! วันนี้ชาร์จไฟหรือยังนะ 🔋</div>
+  </div>
+    <div class="filter-row">
+      <label style="margin:0;">ช่วงวันที่:</label>
+      <input type="date" id="filterFrom">
+      <input type="date" id="filterTo">
+      <button class="btn" onclick="renderDashboard()">กรอง</button>
+      <button class="btn" style="background:linear-gradient(135deg,#94a3b8,#64748b)" onclick="clearFilter()">ล้างตัวกรอง</button>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-box">
+        <div class="icon-circle" style="background:rgba(79,70,229,.1);">💸</div>
+        <div class="label">ค่าใช้จ่ายรวมทั้งหมด</div>
+        <div class="value" id="sumTotalCost">0</div>
+        <div class="label">บาท</div>
+      </div>
+      <div class="summary-box">
+        <div class="icon-circle" style="background:rgba(99,102,241,.1);">🔄</div>
+        <div class="label">จำนวนครั้งชาร์จทั้งหมด</div>
+        <div class="value" id="sumCount">0</div>
+        <div class="label">ครั้ง</div>
+      </div>
+      <div class="summary-box">
+        <div class="icon-circle" style="background:rgba(6,182,212,.1);">⚡</div>
+        <div class="label">kWh รวมทั้งหมด</div>
+        <div class="value" id="sumKwh">0</div>
+        <div class="label">kWh</div>
+      </div>
+      <div class="summary-box">
+        <div class="icon-circle" style="background:rgba(16,185,129,.1);">📊</div>
+        <div class="label">เฉลี่ยต่อครั้ง</div>
+        <div class="value" id="sumAvg">0</div>
+        <div class="label">บาท/ครั้ง</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card" style="grid-column:1/-1;"><h2>📈 เปรียบเทียบรายจ่ายแต่ละเดือน</h2><canvas id="chartMonthlyCost"></canvas></div>
+      <div class="card"><h2>🔢 จำนวนครั้งชาร์จรายเดือน</h2><canvas id="chartMonthlyCount"></canvas></div>
+      <div class="card"><h2>🔋 kWh รวมรายเดือน</h2><canvas id="chartMonthlyKwh"></canvas></div>
+      <div class="card" style="grid-column:1/-1;"><h2>🥧 สัดส่วน AC vs DC (ค่าใช้จ่าย)</h2><canvas id="chartTypeDoughnut"></canvas></div>
+    </div>
+  </div>
+
+  <!-- RECORD FORM -->
+  <div class="tab" id="record">
+    <div class="card">
+      <h2>➕ บันทึกการชาร์จ</h2>
+      <label>เลือกประเภทการชาร์จ</label>
+      <div class="type-toggle">
+        <button id="btnTypeAC" onclick="selectType('AC')">🔌 ชาร์จ AC (บ้าน/ที่ทำงาน)</button>
+        <button id="btnTypeDC" onclick="selectType('DC')">⚡ ชาร์จ DC (สถานีชาร์จ)</button>
+      </div>
+
+      <div class="field-section" id="acFields">
+        <div class="form-grid">
+          <div><label>วันที่ชาร์จ</label><input type="date" id="acDate"></div>
+          <div><label>% เริ่มต้น</label><input type="number" id="acStart" min="0" max="100" placeholder="เช่น 20"></div>
+          <div><label>% สิ้นสุด</label><input type="number" id="acEnd" min="0" max="100" placeholder="เช่น 80"></div>
+          <div>
+            <label>ค่าไฟต่อหน่วย (บาท/kWh)</label>
+            <select id="acRateSelect">
+              <option value="4">4.0 บาท</option><option value="4.5">4.5 บาท</option><option value="5">5.0 บาท</option>
+              <option value="5.5">5.5 บาท</option><option value="6">6.0 บาท</option><option value="6.5">6.5 บาท</option>
+              <option value="7">7.0 บาท</option><option value="7.5">7.5 บาท</option><option value="custom">กำหนดเอง...</option>
+            </select>
+          </div>
+          <div id="acCustomRateBox" style="display:none;"><label>ระบุค่าไฟเอง (บาท/kWh)</label><input type="number" id="acCustomRate" step="0.01" placeholder="เช่น 4.2"></div>
+        </div>
+        <div class="preview" id="acPreview">กรอกข้อมูลเพื่อดูค่าประมาณการ kWh และค่าไฟ</div>
+      </div>
+
+      <div class="field-section" id="dcFields">
+        <div class="form-grid">
+          <div><label>วันที่ชาร์จ</label><input type="date" id="dcDate"></div>
+          <div><label>ชื่อสถานีชาร์จ</label><input type="text" id="dcStation" placeholder="เช่น EA Anywhere, PEA VOLTA"></div>
+          <div><label>จำนวนไฟที่ชาร์จ (kWh)</label><input type="number" id="dcKwh" step="0.01" placeholder="เช่น 30"></div>
+          <div>
+            <label>ราคาต่อหน่วย (บาท/kWh)</label>
+            <select id="dcRateSelect">
+              <option value="6">6.0 บาท</option><option value="6.5">6.5 บาท</option><option value="7">7.0 บาท</option>
+              <option value="7.5">7.5 บาท</option><option value="8">8.0 บาท</option><option value="8.5">8.5 บาท</option>
+              <option value="9">9.0 บาท</option><option value="custom">กำหนดเอง...</option>
+            </select>
+          </div>
+          <div id="dcCustomRateBox" style="display:none;"><label>ระบุราคาเอง (บาท/kWh)</label><input type="number" id="dcCustomRate" step="0.01" placeholder="เช่น 7.2"></div>
+        </div>
+        <div class="preview" id="dcPreview">กรอกข้อมูลเพื่อดูค่าประมาณการราคารวม</div>
+      </div>
+
+      <button class="btn" id="saveBtn" onclick="saveRecord()" style="display:none;">💾 บันทึกการชาร์จ</button>
+    </div>
+  </div>
+
+  <!-- MONTHLY SUMMARY -->
+  <div class="tab" id="monthly">
+    <div class="card">
+      <h2>📅 สรุปการชาร์จรายเดือน</h2>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>เดือน</th><th>ครั้ง AC</th><th>ครั้ง DC</th><th>รวมครั้ง</th><th>kWh รวม</th><th>ค่าใช้จ่ายรวม (บาท)</th></tr></thead>
+          <tbody id="monthlyBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="charts-grid">
+      <div class="card" style="grid-column:1/-1;"><h2>📊 แผนภูมิค่าใช้จ่ายรายเดือน (AC vs DC)</h2><canvas id="chartMonthlyReport"></canvas></div>
+      <div class="card" style="grid-column:1/-1;"><h2>📈 แนวโน้ม kWh และค่าใช้จ่ายรวมรายเดือน</h2><canvas id="chartMonthlyTrend"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TOTAL COST SUMMARY -->
+  <div class="tab" id="totalcost">
+
+    <div class="card">
+      <h2>🚘 ข้อมูลรถและไฟแนนซ์</h2>
+      <div class="form-grid">
+        <div><label>ราคารถ (บาท)</label><input type="number" id="carPrice" step="0.01"></div>
+        <div><label>เงินดาวน์ (บาท)</label><input type="number" id="downPayment" step="0.01"></div>
+        <div><label>ผ่อนเดือนละ (บาท)</label><input type="number" id="monthlyInstallment" step="0.01"></div>
+        <div><label>ผ่อนทุกวันที่</label><input type="number" id="dueDay" min="1" max="31"></div>
+        <div><label>จำนวนงวดทั้งหมด</label><input type="number" id="totalInstallments"></div>
+        <div><label>ยอดเรียกเก็บคงเหลือ (ตามใบแจ้งหนี้ล่าสุด)</label><input type="number" id="remainingBalance" step="0.01"></div>
+      </div>
+      <button class="btn" onclick="saveFinanceSettings()">💾 บันทึกข้อมูลไฟแนนซ์</button>
+      <p class="note">* ใช้ยอดนี้เทียบกับใบแจ้งหนี้ธนาคารทุกเดือน ส่วนยอด "ผ่อนไปแล้วจริง" ด้านล่างจะคำนวณจากประวัติการจ่ายค่างวดที่บันทึกไว้</p>
+
+      <hr class="sep">
+
+      <h2>🧾 บันทึกการจ่ายค่างวด</h2>
+      <div class="form-grid">
+        <div><label>วันที่จ่าย</label><input type="date" id="payDate"></div>
+        <div><label>งวดที่</label><input type="number" id="payNo" placeholder="เช่น 1"></div>
+        <div><label>จำนวนเงินที่จ่าย (บาท)</label><input type="number" id="payAmount" step="0.01" placeholder="เช่น 6581"></div>
+        <div><label>หมายเหตุ (ไม่บังคับ)</label><input type="text" id="payNote" placeholder="เช่น จ่ายตรงเวลา"></div>
+      </div>
+      <button class="btn pay" onclick="saveInstallmentPayment()">💾 บันทึกการจ่ายค่างวด</button>
+
+      <div class="progress-wrap"><div class="progress-bar" id="payProgressBar" style="width:0%"></div></div>
+      <p class="note" id="payProgressText">ยังไม่มีข้อมูลการจ่ายค่างวด</p>
+
+      <div style="overflow-x:auto;margin-top:12px;">
+        <table>
+          <thead><tr><th>วันที่จ่าย</th><th>งวดที่</th><th>จำนวนเงิน (บาท)</th><th>หมายเหตุ</th><th>จัดการ</th></tr></thead>
+          <tbody id="installmentBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🛡️ บันทึกค่าประกันภัย</h2>
+      <div class="form-grid">
+        <div><label>วันที่ชำระ</label><input type="date" id="insDate"></div>
+        <div><label>รายละเอียด</label><input type="text" id="insDesc" placeholder="เช่น ประกันชั้น 1 ปีที่ 1"></div>
+        <div><label>จำนวนเงิน (บาท)</label><input type="number" id="insAmount" step="0.01" placeholder="เช่น 18000"></div>
+      </div>
+      <button class="btn ins" onclick="saveInsurance()">💾 บันทึกค่าประกัน</button>
+      <div style="overflow-x:auto;margin-top:16px;">
+        <table>
+          <thead><tr><th>วันที่</th><th>รายละเอียด</th><th>จำนวนเงิน (บาท)</th><th>จัดการ</th></tr></thead>
+          <tbody id="insuranceBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(79,70,229,.1);">🚗</div><div class="label">ราคารถ</div><div class="value" id="tcCarPrice">0</div><div class="label">บาท</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(99,102,241,.1);">🏦</div><div class="label">ยอดไฟแนนซ์รวมทั้งสัญญา</div><div class="value" id="tcFinanceTotal">0</div><div class="label">บาท (ดาวน์ + ค่างวดรวม)</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(239,68,68,.1);">📈</div><div class="label">ดอกเบี้ยรวมตลอดสัญญา</div><div class="value" id="tcInterest">0</div><div class="label">บาท</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(245,158,11,.1);">🧾</div><div class="label">งวดที่จ่ายแล้ว / ทั้งหมด</div><div class="value" id="tcInstallmentCount">0 / 0</div><div class="label">งวด</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(245,158,11,.1);">💵</div><div class="label">ผ่อนไปแล้วจริง (จากบันทึก)</div><div class="value" id="tcPaidSoFar">0</div><div class="label">บาท (ดาวน์ + ค่างวดที่จ่าย)</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(100,116,139,.1);">📄</div><div class="label">ยอดคงเหลือตามใบแจ้งหนี้</div><div class="value" id="tcRemaining">0</div><div class="label">บาท</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(139,92,246,.1);">🛡️</div><div class="label">ค่าประกันรวมที่จ่ายไป</div><div class="value" id="tcInsurance">0</div><div class="label">บาท</div></div>
+      <div class="summary-box"><div class="icon-circle" style="background:rgba(16,185,129,.1);">⚡</div><div class="label">ค่าไฟชาร์จรวมทั้งหมด</div><div class="value" id="tcCharging">0</div><div class="label">บาท</div></div>
+      <div class="summary-box highlight"><div class="icon-circle">💎</div><div class="label">รวมค่าใช้จ่ายที่จ่ายไปแล้วจริง</div><div class="value" id="tcGrandTotal">0</div><div class="label">บาท (ผ่อนรถ + ประกัน + ค่าชาร์จ)</div></div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card" style="grid-column:1/-1;"><h2>🥧 สัดส่วนค่าใช้จ่ายทั้งหมดที่เกิดขึ้นจริง</h2><canvas id="chartTotalBreakdown"></canvas></div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="tab" id="history">
+    <div class="card">
+      <div class="filter-row">
+        <select id="histFilterType">
+          <option value="all">ทุกประเภท</option>
+          <option value="AC">เฉพาะ AC</option>
+          <option value="DC">เฉพาะ DC</option>
+        </select>
+        <input type="date" id="histFrom">
+        <input type="date" id="histTo">
+        <button class="btn" onclick="renderHistory()">กรอง</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>วันที่</th><th>ประเภท</th><th>รายละเอียด</th><th>kWh</th><th>ค่าใช้จ่าย (บาท)</th><th>จัดการ</th></tr></thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="tab" id="settings">
+    <div class="card">
+      <h2>⚙️ ตั้งค่า</h2>
+      <div class="form-grid">
+        <div><label>ความจุแบตเตอรี่ที่ 100% (kWh)</label><input type="number" id="batteryCapacity" step="0.1" value="39.4"></div>
+      </div>
+      <button class="btn" onclick="saveSettings()">💾 บันทึกการตั้งค่า</button>
+      <p class="note">* ใช้สำหรับคำนวณ kWh จาก % แบตเตอรี่ในการชาร์จ AC (ค่าเริ่มต้น 39.4 kWh สำหรับ Geely EX2)</p>
+      <hr class="sep">
+      <button class="btn danger" onclick="clearAllData()">🗑️ ล้างข้อมูลการชาร์จทั้งหมด</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const STORAGE_KEY = 'ev_charging_records';
+const SETTINGS_KEY = 'ev_charging_settings';
+const FINANCE_KEY = 'ev_finance_settings';
+const INSURANCE_KEY = 'ev_insurance_records';
+const INSTALLMENT_KEY = 'ev_installment_payments';
+let currentType = null;
+
+function getRecords(){ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+function saveRecords(recs){ localStorage.setItem(STORAGE_KEY, JSON.stringify(recs)); }
+function getSettings(){ return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{"capacity":39.4}'); }
+function saveSettingsData(s){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }
+
+function getFinanceSettings(){
+  return JSON.parse(localStorage.getItem(FINANCE_KEY) || JSON.stringify({
+    carPrice:459000, downPayment:45900, monthlyInstallment:6581,
+    dueDay:5, totalInstallments:84, remainingBalance:539639
+  }));
+}
+function saveFinanceSettingsData(s){ localStorage.setItem(FINANCE_KEY, JSON.stringify(s)); }
+function getInsuranceRecords(){ return JSON.parse(localStorage.getItem(INSURANCE_KEY) || '[]'); }
+function saveInsuranceRecords(recs){ localStorage.setItem(INSURANCE_KEY, JSON.stringify(recs)); }
+function getInstallmentPayments(){ return JSON.parse(localStorage.getItem(INSTALLMENT_KEY) || '[]'); }
+function saveInstallmentPayments(recs){ localStorage.setItem(INSTALLMENT_KEY, JSON.stringify(recs)); }
+
+function formatMoney(n){
+  return Number(n||0).toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='dashboard') renderDashboard();
+    if(btn.dataset.tab==='history') renderHistory();
+    if(btn.dataset.tab==='monthly') renderMonthly();
+    if(btn.dataset.tab==='totalcost'){ loadFinanceUI(); renderInsuranceTable(); renderInstallmentTable(); renderTotalCostSummary(); }
+  });
+});
+
+function selectType(type){
+  currentType = type;
+  document.getElementById('btnTypeAC').classList.toggle('selected-ac', type==='AC');
+  document.getElementById('btnTypeDC').classList.toggle('selected-dc', type==='DC');
+  document.getElementById('acFields').classList.toggle('show', type==='AC');
+  document.getElementById('dcFields').classList.toggle('show', type==='DC');
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.style.display = 'inline-block';
+  saveBtn.className = 'btn' + (type==='DC' ? ' dc' : '');
+  saveBtn.textContent = type==='AC' ? '💾 บันทึกการชาร์จ AC' : '💾 บันทึกการชาร์จ DC';
+}
+
+const acRateSelect = document.getElementById('acRateSelect');
+acRateSelect.addEventListener('change', ()=>{
+  document.getElementById('acCustomRateBox').style.display = acRateSelect.value==='custom' ? 'block':'none';
+  updateAcPreview();
+});
+['acStart','acEnd','acCustomRate'].forEach(id=>{ document.getElementById(id).addEventListener('input', updateAcPreview); });
+function getAcRate(){
+  const val = acRateSelect.value;
+  if(val==='custom') return parseFloat(document.getElementById('acCustomRate').value) || 0;
+  return parseFloat(val);
+}
+function updateAcPreview(){
+  const start = parseFloat(document.getElementById('acStart').value);
+  const end = parseFloat(document.getElementById('acEnd').value);
+  const rate = getAcRate();
+  const capacity = getSettings().capacity;
+  const preview = document.getElementById('acPreview');
+  if(isNaN(start) || isNaN(end) || end<=start){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการ kWh และค่าไฟ'; return; }
+  const kwh = (end-start)/100 * capacity;
+  const cost = kwh * (rate||0);
+  preview.innerHTML = `⚡ ชาร์จได้ประมาณ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ค่าไฟประมาณ <b>${cost.toFixed(2)} บาท</b> (${rate||0} บาท/kWh)`;
+}
+
+const dcRateSelect = document.getElementById('dcRateSelect');
+dcRateSelect.addEventListener('change', ()=>{
+  document.getElementById('dcCustomRateBox').style.display = dcRateSelect.value==='custom' ? 'block':'none';
+  updateDcPreview();
+});
+['dcKwh','dcCustomRate'].forEach(id=>{ document.getElementById(id).addEventListener('input', updateDcPreview); });
+function getDcRate(){
+  const val = dcRateSelect.value;
+  if(val==='custom') return parseFloat(document.getElementById('dcCustomRate').value) || 0;
+  return parseFloat(val);
+}
+function updateDcPreview(){
+  const kwh = parseFloat(document.getElementById('dcKwh').value);
+  const rate = getDcRate();
+  const preview = document.getElementById('dcPreview');
+  if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการราคารวม'; return; }
+  const cost = kwh * (rate||0);
+  preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ราคารวมประมาณ <b>${cost.toFixed(2)} บาท</b> (${rate||0} บาท/kWh)`;
+}
+
+function saveRecord(){
+  if(currentType==='AC') saveAcRecord();
+  else if(currentType==='DC') saveDcRecord();
+}
+function saveAcRecord(){
+  const date = document.getElementById('acDate').value;
+  const start = parseFloat(document.getElementById('acStart').value);
+  const end = parseFloat(document.getElementById('acEnd').value);
+  const rate = getAcRate();
+  const capacity = getSettings().capacity;
+  if(!date || isNaN(start) || isNaN(end) || end<=start || !rate){ alert('กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง (สิ้นสุด > เริ่มต้น)'); return; }
+  const kwh = (end-start)/100 * capacity;
+  const cost = kwh * rate;
+  const recs = getRecords();
+  recs.push({ id: Date.now(), type:'AC', date, startPercent:start, endPercent:end, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
+  saveRecords(recs);
+  alert('บันทึกการชาร์จ AC สำเร็จ ✅');
+  document.getElementById('acDate').value=''; document.getElementById('acStart').value=''; document.getElementById('acEnd').value='';
+  updateAcPreview();
+}
+function saveDcRecord(){
+  const date = document.getElementById('dcDate').value;
+  const station = document.getElementById('dcStation').value.trim();
+  const kwh = parseFloat(document.getElementById('dcKwh').value);
+  const rate = getDcRate();
+  if(!date || !station || isNaN(kwh) || kwh<=0 || !rate){ alert('กรุณากรอกวันที่ ชื่อสถานี จำนวน kWh และราคาต่อหน่วยให้ครบถ้วน'); return; }
+  const cost = kwh * rate;
+  const recs = getRecords();
+  recs.push({ id: Date.now(), type:'DC', date, station, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
+  saveRecords(recs);
+  alert('บันทึกการชาร์จ DC สำเร็จ ✅');
+  document.getElementById('dcDate').value=''; document.getElementById('dcStation').value=''; document.getElementById('dcKwh').value='';
+  updateDcPreview();
+}
+
+function loadSettingsUI(){ document.getElementById('batteryCapacity').value = getSettings().capacity; }
+function saveSettings(){
+  const capacity = parseFloat(document.getElementById('batteryCapacity').value) || 39.4;
+  saveSettingsData({capacity});
+  alert('บันทึกการตั้งค่าเรียบร้อย ✅');
+}
+function clearAllData(){
+  if(confirm('ต้องการล้างข้อมูลการชาร์จทั้งหมดใช่หรือไม่? การกระทำนี้ย้อนกลับไม่ได้')){
+    localStorage.removeItem(STORAGE_KEY);
+    renderDashboard(); renderHistory(); renderMonthly(); renderTotalCostSummary();
+    alert('ล้างข้อมูลทั้งหมดแล้ว');
+  }
+}
+
+function loadFinanceUI(){
+  const f = getFinanceSettings();
+  document.getElementById('carPrice').value = f.carPrice;
+  document.getElementById('downPayment').value = f.downPayment;
+  document.getElementById('monthlyInstallment').value = f.monthlyInstallment;
+  document.getElementById('dueDay').value = f.dueDay;
+  document.getElementById('totalInstallments').value = f.totalInstallments;
+  document.getElementById('remainingBalance').value = f.remainingBalance;
+  const payments = getInstallmentPayments();
+  document.getElementById('payNo').value = payments.length + 1;
+  document.getElementById('payAmount').value = f.monthlyInstallment;
+}
+function saveFinanceSettings(){
+  const f = {
+    carPrice: parseFloat(document.getElementById('carPrice').value) || 0,
+    downPayment: parseFloat(document.getElementById('downPayment').value) || 0,
+    monthlyInstallment: parseFloat(document.getElementById('monthlyInstallment').value) || 0,
+    dueDay: parseInt(document.getElementById('dueDay').value) || 5,
+    totalInstallments: parseInt(document.getElementById('totalInstallments').value) || 0,
+    remainingBalance: parseFloat(document.getElementById('remainingBalance').value) || 0
+  };
+  saveFinanceSettingsData(f);
+  alert('บันทึกข้อมูลไฟแนนซ์เรียบร้อย ✅');
+  renderTotalCostSummary();
+}
+
+function saveInstallmentPayment(){
+  const date = document.getElementById('payDate').value;
+  const no = parseInt(document.getElementById('payNo').value);
+  const amount = parseFloat(document.getElementById('payAmount').value);
+  const note = document.getElementById('payNote').value.trim();
+  if(!date || isNaN(no) || no<=0 || isNaN(amount) || amount<=0){
+    alert('กรุณากรอกวันที่ งวดที่ และจำนวนเงินให้ครบถ้วน');
+    return;
+  }
+  const recs = getInstallmentPayments();
+  if(recs.some(r=>r.no===no)){
+    if(!confirm(`งวดที่ ${no} มีการบันทึกไว้แล้ว ต้องการบันทึกซ้ำหรือไม่?`)) return;
+  }
+  recs.push({ id: Date.now(), date, no, amount:+amount.toFixed(2), note });
+  saveInstallmentPayments(recs);
+  alert('บันทึกการจ่ายค่างวดสำเร็จ ✅');
+  document.getElementById('payDate').value='';
+  document.getElementById('payNote').value='';
+  const f = getFinanceSettings();
+  document.getElementById('payNo').value = recs.length + 1;
+  document.getElementById('payAmount').value = f.monthlyInstallment;
+  renderInstallmentTable();
+  renderTotalCostSummary();
+}
+function deleteInstallmentPayment(id){
+  if(!confirm('ต้องการลบรายการจ่ายค่างวดนี้ใช่หรือไม่?')) return;
+  const recs = getInstallmentPayments().filter(r=>r.id!==id);
+  saveInstallmentPayments(recs);
+  renderInstallmentTable();
+  renderTotalCostSummary();
+}
+function renderInstallmentTable(){
+  const recs = getInstallmentPayments().sort((a,b)=>a.no-b.no);
+  const tbody = document.getElementById('installmentBody');
+  if(recs.length===0){
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">ยังไม่มีข้อมูลการจ่ายค่างวด</td></tr>';
+  } else {
+    tbody.innerHTML = recs.map(r=>`<tr>
+      <td>${r.date}</td>
+      <td><span class="badge paid">งวด ${r.no}</span></td>
+      <td>${formatMoney(r.amount)}</td>
+      <td>${r.note || '-'}</td>
+      <td><button class="btn danger" onclick="deleteInstallmentPayment(${r.id})">ลบ</button></td>
+    </tr>`).join('');
+  }
+  const f = getFinanceSettings();
+  const paidCount = recs.length;
+  const totalInstallments = f.totalInstallments || 1;
+  const pct = Math.min(100, (paidCount/totalInstallments*100));
+  document.getElementById('payProgressBar').style.width = pct.toFixed(1)+'%';
+  document.getElementById('payProgressText').textContent =
+    `ผ่อนไปแล้ว ${paidCount} จาก ${f.totalInstallments} งวด (${pct.toFixed(1)}%) — เหลืออีก ${Math.max(0,f.totalInstallments-paidCount)} งวด`;
+}
+
+function saveInsurance(){
+  const date = document.getElementById('insDate').value;
+  const desc = document.getElementById('insDesc').value.trim();
+  const amount = parseFloat(document.getElementById('insAmount').value);
+  if(!date || !desc || isNaN(amount) || amount<=0){ alert('กรุณากรอกวันที่ รายละเอียด และจำนวนเงินให้ครบถ้วน'); return; }
+  const recs = getInsuranceRecords();
+  recs.push({ id: Date.now(), date, desc, amount:+amount.toFixed(2) });
+  saveInsuranceRecords(recs);
+  document.getElementById('insDate').value=''; document.getElementById('insDesc').value=''; document.getElementById('insAmount').value='';
+  renderInsuranceTable();
+  renderTotalCostSummary();
+}
+function deleteInsurance(id){
+  if(!confirm('ต้องการลบรายการประกันนี้ใช่หรือไม่?')) return;
+  const recs = getInsuranceRecords().filter(r=>r.id!==id);
+  saveInsuranceRecords(recs);
+  renderInsuranceTable();
+  renderTotalCostSummary();
+}
+function renderInsuranceTable(){
+  const recs = getInsuranceRecords().sort((a,b)=>b.date.localeCompare(a.date));
+  const tbody = document.getElementById('insuranceBody');
+  if(recs.length===0){ tbody.innerHTML = '<tr><td colspan="4" class="empty">ยังไม่มีข้อมูลค่าประกัน</td></tr>'; return; }
+  tbody.innerHTML = recs.map(r=>`<tr>
+    <td>${r.date}</td><td>${r.desc}</td><td>${formatMoney(r.amount)}</td>
+    <td><button class="btn danger" onclick="deleteInsurance(${r.id})">ลบ</button></td>
+  </tr>`).join('');
+}
+
+let totalCharts = {};
+function destroyTotalCharts(){ Object.values(totalCharts).forEach(c=>c.destroy()); totalCharts = {}; }
+function renderTotalCostSummary(){
+  const f = getFinanceSettings();
+  const financeTotal = f.downPayment + (f.monthlyInstallment * f.totalInstallments);
+  const interestTotal = financeTotal - f.carPrice;
+  const payments = getInstallmentPayments();
+  const paidCount = payments.length;
+  const paidInstallmentAmount = payments.reduce((s,r)=>s+r.amount,0);
+  const paidSoFar = f.downPayment + paidInstallmentAmount;
+  const insuranceTotal = getInsuranceRecords().reduce((s,r)=>s+r.amount,0);
+  const chargingTotal = getRecords().reduce((s,r)=>s+r.cost,0);
+  const grandTotal = paidSoFar + insuranceTotal + chargingTotal;
+
+  document.getElementById('tcCarPrice').textContent = formatMoney(f.carPrice);
+  document.getElementById('tcFinanceTotal').textContent = formatMoney(financeTotal);
+  document.getElementById('tcInterest').textContent = formatMoney(interestTotal);
+  document.getElementById('tcInstallmentCount').textContent = `${paidCount} / ${f.totalInstallments}`;
+  document.getElementById('tcPaidSoFar').textContent = formatMoney(paidSoFar);
+  document.getElementById('tcRemaining').textContent = formatMoney(f.remainingBalance);
+  document.getElementById('tcInsurance').textContent = formatMoney(insuranceTotal);
+  document.getElementById('tcCharging').textContent = formatMoney(chargingTotal);
+  document.getElementById('tcGrandTotal').textContent = formatMoney(grandTotal);
+
+  destroyTotalCharts();
+  totalCharts.breakdown = new Chart(document.getElementById('chartTotalBreakdown'), {
+    type:'doughnut',
+    data:{
+      labels:[
+        `ผ่อนรถ (ดาวน์+ค่างวดที่จ่ายไป) - ${formatMoney(paidSoFar)} บาท`,
+        `ค่าประกันภัย - ${formatMoney(insuranceTotal)} บาท`,
+        `ค่าไฟชาร์จ - ${formatMoney(chargingTotal)} บาท`
+      ],
+      datasets:[{ data:[paidSoFar, insuranceTotal, chargingTotal], backgroundColor:['#4f46e5','#8b5cf6','#10b981'] }]
+    },
+    options:{ plugins:{legend:{position:'bottom', labels:{color:'#767e94'}}} }
+  });
+}
+
+function clearFilter(){ document.getElementById('filterFrom').value=''; document.getElementById('filterTo').value=''; renderDashboard(); }
+function filterByDate(recs, from, to){
+  return recs.filter(r=>{
+    if(from && r.date < from) return false;
+    if(to && r.date > to) return false;
+    return true;
+  });
+}
+function getMonthlyData(recs){
+  const months = {};
+  recs.forEach(r=>{
+    const m = r.date.slice(0,7);
+    if(!months[m]) months[m] = {AC:0, DC:0, countAC:0, countDC:0, kwh:0, cost:0};
+    months[m][r.type] += r.cost;
+    months[m].cost += r.cost;
+    months[m]['count'+r.type]++;
+    if(r.kwh) months[m].kwh += r.kwh;
+  });
+  return months;
+}
+
+let charts = {};
+function destroyCharts(){ Object.values(charts).forEach(c=>c.destroy()); charts = {}; }
+const gridColor = '#eceff8';
+const tickColor = '#767e94';
+
+function renderDashboard(){
+function updateMascotSpeech(){
+  const el = document.getElementById('mascotSpeech');
+  if(!el) return;
+
+  const recs = getRecords();
+  const thisMonth = new Date().toISOString().slice(0,7);
+  const monthRecs = recs.filter(r => r.date.startsWith(thisMonth));
+  const monthCost = monthRecs.reduce((s,r)=>s+r.cost,0);
+  const monthCount = monthRecs.length;
+
+  const lastRec = [...recs].sort((a,b)=>b.date.localeCompare(a.date))[0];
+
+  const messages = [];
+
+  if(monthCount > 0){
+    messages.push(`เดือนนี้ชาร์จไปแล้ว ${monthCount} ครั้ง รวม ${monthCost.toFixed(0)} บาทนะ! 💪`);
+  } else {
+    messages.push('เดือนนี้ยังไม่ได้บันทึกการชาร์จเลยนะ 🥲 อย่าลืมบันทึกด้วย!');
+  }
+
+  if(lastRec){
+    const daysAgo = Math.floor((new Date() - new Date(lastRec.date)) / 86400000);
+    if(daysAgo >= 5){
+      messages.push(`ไม่ได้ชาร์จมา ${daysAgo} วันแล้วนะ แบตยังไหวอยู่ไหม? 🔋`);
+    }
+  }
+
+  messages.push('ขับปลอดภัย ประหยัดไฟ รักษ์โลกไปด้วยกันนะ! 🌱');
+  messages.push('เช็คยอดค่าใช้จ่ายที่แท็บ "สรุปค่าใช้จ่ายทั้งหมด" ได้เลย 📊');
+
+  const msg = messages[Math.floor(Math.random() * messages.length)];
+  el.textContent = msg;
+}
+  const from = document.getElementById('filterFrom').value;
+  const to = document.getElementById('filterTo').value;
+  let recs = getRecords();
+  recs = filterByDate(recs, from, to);
+
+  const totalCost = recs.reduce((s,r)=>s+r.cost,0);
+  const totalKwh = recs.reduce((s,r)=>s+(r.kwh||0),0);
+  const count = recs.length;
+  const avg = count ? (totalCost/count) : 0;
+
+  document.getElementById('sumTotalCost').textContent = totalCost.toFixed(2);
+  document.getElementById('sumCount').textContent = count;
+  document.getElementById('sumKwh').textContent = totalKwh.toFixed(2);
+  document.getElementById('sumAvg').textContent = avg.toFixed(2);
+
+  destroyCharts();
+  const months = getMonthlyData(recs);
+  const sortedMonths = Object.keys(months).sort();
+
+  charts.monthlyCost = new Chart(document.getElementById('chartMonthlyCost'), {
+    type:'bar',
+    data:{ labels: sortedMonths, datasets:[
+      { label:'AC (บาท)', data: sortedMonths.map(m=>months[m].AC.toFixed(2)), backgroundColor:'#3b82f6', borderRadius:8 },
+      { label:'DC (บาท)', data: sortedMonths.map(m=>months[m].DC.toFixed(2)), backgroundColor:'#10b981', borderRadius:8 }
+    ]},
+    options:{ plugins:{legend:{labels:{color:tickColor}}}, scales:{y:{beginAtZero:true, stacked:true, ticks:{color:tickColor}, grid:{color:gridColor}}, x:{stacked:true, ticks:{color:tickColor}, grid:{display:false}}} }
+  });
+  charts.monthlyCount = new Chart(document.getElementById('chartMonthlyCount'), {
+    type:'bar',
+    data:{ labels: sortedMonths, datasets:[{ label:'จำนวนครั้ง', data: sortedMonths.map(m=>months[m].countAC+months[m].countDC), backgroundColor:'#4f46e5', borderRadius:8 }]},
+    options:{ plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, ticks:{color:tickColor, stepSize:1}, grid:{color:gridColor}}, x:{ticks:{color:tickColor}, grid:{display:false}}} }
+  });
+  charts.monthlyKwh = new Chart(document.getElementById('chartMonthlyKwh'), {
+    type:'bar',
+    data:{ labels: sortedMonths, datasets:[{ label:'kWh', data: sortedMonths.map(m=>months[m].kwh.toFixed(2)), backgroundColor:'#06b6d4', borderRadius:8 }]},
+    options:{ plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, ticks:{color:tickColor}, grid:{color:gridColor}}, x:{ticks:{color:tickColor}, grid:{display:false}}} }
+  });
+  const acCost = recs.filter(r=>r.type==='AC').reduce((s,r)=>s+r.cost,0);
+  const dcCost = recs.filter(r=>r.type==='DC').reduce((s,r)=>s+r.cost,0);
+  charts.typeDoughnut = new Chart(document.getElementById('chartTypeDoughnut'), {
+    type:'doughnut',
+    data:{ labels:['AC ('+acCost.toFixed(0)+' บาท)','DC ('+dcCost.toFixed(0)+' บาท)'], datasets:[{ data:[acCost, dcCost], backgroundColor:['#3b82f6','#10b981'] }]},
+    options:{ plugins:{legend:{position:'bottom', labels:{color:tickColor}}} }
+  });
+}
+
+let monthlyCharts = {};
+function destroyMonthlyCharts(){ Object.values(monthlyCharts).forEach(c=>c.destroy()); monthlyCharts = {}; }
+function renderMonthly(){
+  const recs = getRecords();
+  const months = getMonthlyData(recs);
+  const sortedMonths = Object.keys(months).sort().reverse();
+  const tbody = document.getElementById('monthlyBody');
+  if(sortedMonths.length===0){
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">ยังไม่มีข้อมูลการชาร์จ</td></tr>';
+  } else {
+    tbody.innerHTML = sortedMonths.map(m=>{
+      const d = months[m];
+      const totalCount = d.countAC + d.countDC;
+      return `<tr><td><b>${m}</b></td><td>${d.countAC}</td><td>${d.countDC}</td><td>${totalCount}</td><td>${d.kwh.toFixed(2)}</td><td>${d.cost.toFixed(2)}</td></tr>`;
+    }).join('');
+  }
+  destroyMonthlyCharts();
+  const ascMonths = Object.keys(months).sort();
+  monthlyCharts.report = new Chart(document.getElementById('chartMonthlyReport'), {
+    type:'bar',
+    data:{ labels: ascMonths, datasets:[
+      { label:'AC (บาท)', data: ascMonths.map(m=>months[m].AC.toFixed(2)), backgroundColor:'#3b82f6', borderRadius:8 },
+      { label:'DC (บาท)', data: ascMonths.map(m=>months[m].DC.toFixed(2)), backgroundColor:'#10b981', borderRadius:8 }
+    ]},
+    options:{ plugins:{legend:{labels:{color:tickColor}}}, scales:{y:{beginAtZero:true, ticks:{color:tickColor}, grid:{color:gridColor}}, x:{ticks:{color:tickColor}, grid:{display:false}}} }
+  });
+  monthlyCharts.trend = new Chart(document.getElementById('chartMonthlyTrend'), {
+    type:'line',
+    data:{ labels: ascMonths, datasets:[
+      { label:'ค่าใช้จ่ายรวม (บาท)', data: ascMonths.map(m=>months[m].cost.toFixed(2)), borderColor:'#4f46e5', backgroundColor:'rgba(79,70,229,.1)', tension:.35, fill:true, yAxisID:'y' },
+      { label:'kWh รวม', data: ascMonths.map(m=>months[m].kwh.toFixed(2)), borderColor:'#10b981', backgroundColor:'rgba(16,185,129,.1)', tension:.35, fill:true, yAxisID:'y1' }
+    ]},
+    options:{ plugins:{legend:{labels:{color:tickColor}}}, scales:{
+      y:{ position:'left', ticks:{color:tickColor}, grid:{color:gridColor} },
+      y1:{ position:'right', ticks:{color:tickColor}, grid:{display:false} },
+      x:{ ticks:{color:tickColor}, grid:{display:false} }
+    }}
+  });
+}
+
+function renderHistory(){
+  const type = document.getElementById('histFilterType').value;
+  const from = document.getElementById('histFrom').value;
+  const to = document.getElementById('histTo').value;
+  let recs = getRecords();
+  recs = filterByDate(recs, from, to);
+  if(type!=='all') recs = recs.filter(r=>r.type===type);
+  recs.sort((a,b)=> b.date.localeCompare(a.date));
+  const tbody = document.getElementById('historyBody');
+  if(recs.length===0){ tbody.innerHTML = '<tr><td colspan="6" class="empty">ยังไม่มีข้อมูลการชาร์จ</td></tr>'; return; }
+  tbody.innerHTML = recs.map(r=>{
+    const badge = r.type==='AC' ? '<span class="badge ac">AC</span>' : '<span class="badge dc">DC</span>';
+    const detail = r.type==='AC' ? `${r.startPercent}% → ${r.endPercent}% (${r.rate} บาท/kWh)` : `สถานี: ${r.station} (${r.rate} บาท/kWh)`;
+    const kwh = r.kwh ?? '-';
+    return `<tr><td>${r.date}</td><td>${badge}</td><td>${detail}</td><td>${kwh}</td><td>${r.cost.toFixed(2)}</td>
+      <td><button class="btn danger" onclick="deleteRecord(${r.id})">ลบ</button></td></tr>`;
+  }).join('');
+}
+function deleteRecord(id){
+  if(!confirm('ต้องการลบรายการนี้ใช่หรือไม่?')) return;
+  const recs = getRecords().filter(r=>r.id!==id);
+  saveRecords(recs);
+  renderHistory(); renderDashboard(); renderMonthly(); renderTotalCostSummary();
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  loadSettingsUI();
+  renderDashboard(); renderHistory(); renderMonthly();
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('acDate').value = today;
+  document.getElementById('dcDate').value = today;
+  document.getElementById('insDate').value = today;
+  document.getElementById('payDate').value = today;
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+  }
+});
+</script>
+
+</body>
+</html>
