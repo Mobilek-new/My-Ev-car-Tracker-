@@ -328,7 +328,14 @@
 @media(max-width:600px){
   .mascot-box{ justify-content:center; }
   .mascot-speech{ max-width:100%; text-align:center; }
-}
+  .car-card {
+    flex-direction: column; /* เปลี่ยนเป็นแนวตั้งในมือถือ */
+    text-align: center;
+    gap: 10px;
+  }
+  .car-img {
+    width: 120px !important; /* ปรับขนาดรูปให้เล็กลงสำหรับมือถือ */
+  }
   .header-container {
   background: linear-gradient(180deg, #66bb6a 50%, #f4f4f9 50%); /* สีเขียวครึ่งบน พื้นหลังครึ่งล่าง */
   padding: 10px;
@@ -349,7 +356,7 @@
   margin: 0 10px;
 }
 
-.car-img { width: 60px; max-width: 200px; height: auto; object-fit: contain; }
+.car-img { width: 60px; !important; height: auto; !important; object-fit: contain; }
 .car-info h2 { margin: 0; font-size: 1.5rem; }
 .car-info p { margin: 0; color: #666; }
   }
