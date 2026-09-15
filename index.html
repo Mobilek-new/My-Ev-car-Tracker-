@@ -19,549 +19,299 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
-
   --primary:#4d8dff;
-
   --primary-dark:#2870e8;
-
   --secondary:#69d6dc;
-
   --ac-color:#5b9cff;
-
   --dc-color:#3fcf9b;
-
   --ins-color:#b185ff;
-
   --pay-color:#ffbf4d;
-
   --bg:#eaf6ff;
-
   --card:#ffffff;
-
   --text:#24324a;
-
   --muted:#71809a;
-
   --border:#d9e9fb;
-
   --shadow:0 6px 0 rgba(94,150,211,.12), 0 10px 22px rgba(68,125,190,.12);
-
   --shadow-hover:0 8px 0 rgba(94,150,211,.14), 0 16px 28px rgba(68,125,190,.18);
-
 }
-
 
 body{
-
   background:
-
     radial-gradient(circle at 12% 18%, rgba(255,255,255,.95) 0 42px, transparent 43px),
-
     radial-gradient(circle at 17% 20%, rgba(255,255,255,.95) 0 28px, transparent 29px),
-
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.95) 0 32px, transparent 33px),
-
     radial-gradient(circle at 87% 10%, rgba(255,255,255,.85) 0 48px, transparent 49px),
-
     radial-gradient(circle at 93% 12%, rgba(255,255,255,.85) 0 30px, transparent 31px),
-
     linear-gradient(180deg,#bde5ff 0,#eaf7ff 38%,#f5fbff 100%);
-
   background-attachment:fixed;
-
 }
-
 
 /* หัวแอปแบบท้องฟ้าการ์ตูน */
-
 header{
-
   background:linear-gradient(135deg,#4e9bff 0%,#6dd6e2 100%);
-
   border-radius:0 0 36px 36px;
-
   padding:28px 24px 42px;
-
   box-shadow:0 8px 0 rgba(45,117,196,.14),0 14px 28px rgba(45,117,196,.22);
-
 }
-
 
 header::before{
-
   width:170px;
-
   height:170px;
-
   top:-72px;
-
   right:-42px;
-
   background:rgba(255,255,255,.2);
-
   box-shadow:-32px 62px 0 -20px rgba(255,255,255,.15);
-
 }
-
 
 header::after{
-
   width:135px;
-
   height:135px;
-
   bottom:-65px;
-
   left:-38px;
-
   background:rgba(255,255,255,.16);
-
   box-shadow:58px 5px 0 -30px rgba(255,255,255,.14);
-
 }
-
 
 .car-avatar{
-
   width:66px;
-
   height:66px;
-
   font-size:31px;
-
   border:3px solid white;
-
   background:linear-gradient(135deg,#fff,#e7f6ff);
-
   box-shadow:0 5px 0 rgba(43,105,182,.16);
-
   transform:rotate(-4deg);
-
 }
-
 
 header .car-title{
-
   font-size:23px;
-
   text-shadow:0 2px 0 rgba(42,103,175,.2);
-
 }
-
 
 header .sub-title{
-
   font-weight:500;
-
 }
-
 
 /* เมนูแบบป้ายการ์ตูน */
-
 nav{
-
   gap:10px;
-
   padding:16px 18px;
-
 }
-
 
 nav button{
-
   border:2px solid #d7e9ff;
-
   background:#fff;
-
   border-radius:18px;
-
   color:#59708d;
-
   box-shadow:0 4px 0 #d5e8fb;
-
   padding:10px 17px;
-
   transition:transform .18s ease,box-shadow .18s ease;
-
 }
-
 
 nav button:hover{
-
   transform:translateY(-3px) rotate(-1deg);
-
   box-shadow:0 7px 0 #c9e1f8;
-
   color:var(--primary);
-
 }
-
 
 nav button.active{
-
   background:linear-gradient(135deg,#5b9cff,#55c8e1);
-
   border-color:white;
-
   box-shadow:0 5px 0 #3381dc;
-
 }
-
 
 /* การ์ดแบบสติกเกอร์ */
-
 .card,
-
 .summary-box{
-
   border:2px solid #dcecff;
-
   border-radius:24px;
-
   box-shadow:var(--shadow);
-
 }
-
 
 .card{
-
   position:relative;
-
   overflow:hidden;
-
 }
-
 
 .card::after{
-
   content:'✦';
-
   position:absolute;
-
   top:12px;
-
   right:16px;
-
   font-size:20px;
-
   color:#a9d9ff;
-
   opacity:.75;
-
 }
-
 
 .card:hover,
-
 .summary-box:hover{
-
   transform:translateY(-3px);
-
   box-shadow:var(--shadow-hover);
-
 }
-
 
 .card h2{
-
   color:#365276;
-
 }
-
 
 /* การ์ดตัวเลข */
-
 .summary-box{
-
   border-bottom:5px solid #c9e7ff;
-
   background:linear-gradient(180deg,#fff 0%,#f9fdff 100%);
-
 }
-
 
 .summary-box:nth-child(2){border-bottom-color:#cfc8ff;}
-
 .summary-box:nth-child(3){border-bottom-color:#aeeed8;}
-
 .summary-box:nth-child(4){border-bottom-color:#ffe3a6;}
 
-
 .summary-box .icon-circle{
-
   width:46px;
-
   height:46px;
-
   font-size:21px;
-
   border:2px solid rgba(255,255,255,.9);
-
   box-shadow:0 3px 0 rgba(95,146,196,.1);
-
 }
-
 
 .summary-box .value{
-
   color:#315179;
-
   font-size:24px;
-
 }
-
 
 .summary-box.highlight{
-
   border:2px solid white;
-
   border-bottom:5px solid #377ddc;
-
   background:linear-gradient(135deg,#5799ff,#61d4dc);
-
 }
-
 
 /* ช่องกรอกข้อมูล */
-
 input,
-
 select{
-
   border:2px solid #dceafb;
-
   background:#f9fcff;
-
   border-radius:15px;
-
 }
-
 
 input:focus,
-
 select:focus{
-
   border-color:#69a9ff;
-
   box-shadow:0 0 0 4px rgba(105,169,255,.2);
-
 }
-
 
 /* ปุ่มนุ่มนิ่ม */
-
 .btn{
-
   border-radius:16px;
-
   background:linear-gradient(135deg,#5b9cff,#3d83ed);
-
   box-shadow:0 5px 0 #2d72d4,0 8px 14px rgba(55,129,225,.2);
-
 }
-
 
 .btn:hover{
-
   transform:translateY(-2px);
-
   box-shadow:0 7px 0 #2d72d4,0 10px 16px rgba(55,129,225,.22);
-
 }
-
 
 .btn:active{
-
   transform:translateY(3px);
-
   box-shadow:0 2px 0 #2d72d4;
-
 }
-
 
 .btn.dc{
-
   background:linear-gradient(135deg,#54d9a8,#2dbf89);
-
   box-shadow:0 5px 0 #20a875,0 8px 14px rgba(45,191,137,.2);
-
 }
-
 
 .btn.ins{
-
   background:linear-gradient(135deg,#bd99ff,#9571ed);
-
   box-shadow:0 5px 0 #7758ce,0 8px 14px rgba(149,113,237,.2);
-
 }
-
 
 .btn.pay{
-
   background:linear-gradient(135deg,#ffd06b,#f6a944);
-
   box-shadow:0 5px 0 #df8c26,0 8px 14px rgba(246,169,68,.2);
-
 }
-
 
 .btn.danger{
-
   box-shadow:0 4px 0 #cc3b4a;
-
 }
-
 
 /* ปุ่มเลือก AC / DC */
-
 .type-toggle button{
-
   border-radius:20px;
-
   border:2px solid #dceafb;
-
   background:#f9fcff;
-
   box-shadow:0 4px 0 #dfedf9;
-
 }
-
 
 .type-toggle button.selected-ac{
-
   border-color:#77adff;
-
   background:#eaf4ff;
-
   box-shadow:0 4px 0 #b9d8ff;
-
 }
-
 
 .type-toggle button.selected-dc{
-
   border-color:#62d7ad;
-
   background:#ebfff7;
-
   box-shadow:0 4px 0 #b9efd8;
-
 }
-
 
 /* กล่องคำนวณ */
-
 .preview{
-
   border:2px dashed #9fc9ff;
-
   border-radius:18px;
-
   background:linear-gradient(135deg,#eef8ff,#effff8);
-
 }
-
 
 /* ตาราง */
-
 th{
-
   color:#5d7798;
-
   background:#f1f8ff;
-
 }
-
 
 th:first-child{border-radius:12px 0 0 12px;}
-
 th:last-child{border-radius:0 12px 12px 0;}
 
-
 tr:hover td{
-
   background:#f4faff;
-
 }
-
 
 .badge{
-
   border:1px solid rgba(255,255,255,.9);
-
   box-shadow:0 2px 0 rgba(80,130,180,.08);
-
 }
-
 
 .badge.ac{
-
   background:#e6f2ff;
-
   color:#397edb;
-
 }
-
 
 .badge.dc{
-
   background:#e4fbf2;
-
   color:#249b70;
-
 }
-
 
 .badge.paid{
-
   background:#fff4d8;
-
   color:#c6811e;
-
 }
-
 
 /* แถบการผ่อน */
-
 .progress-wrap{
-
   height:15px;
-
   border:2px solid #dbeafb;
-
   background:#edf6ff;
-
 }
-
 
 .progress-bar{
-
   background:linear-gradient(90deg,#ffd267,#ffaf55,#ff8f80);
-
 }
 
-
 /* Mobile */
-
 @media(max-width:600px){
-
   header{padding:24px 16px 35px;}
-
   nav{padding:14px 10px;gap:7px;}
-
   nav button{padding:9px 12px;font-size:12px;}
-
   main{padding:8px 14px 28px;}
-
   .card{padding:17px;border-radius:20px;}
-
   .summary-grid{grid-template-columns:repeat(2,1fr);}
-
   .summary-box{padding:15px 10px;}
-
   .summary-box .value{font-size:19px;}
-
 }
   
 /* ===== EV Mascot ===== */
