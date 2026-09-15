@@ -667,7 +667,7 @@ function updateAcPreview(){
   const preview = document.getElementById('acPreview');
   if(isNaN(start) || isNaN(end) || end<=start){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการ kWh และค่าไฟ'; return; }
   const kwh = (end-start)/100 * capacity;
-  const cost = kwh * (rate||0) * 1.07;
+  const cost = kwh * (rate||0);
   preview.innerHTML = `⚡ ชาร์จได้ประมาณ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ค่าไฟประมาณ <b>${cost.toFixed(2)} บาท (รวม VAT 7%)</b> (${rate||0} บาท/kWh)`;
 }
 
@@ -687,7 +687,7 @@ function updateDcPreview(){
   const rate = getDcRate();
   const preview = document.getElementById('dcPreview');
   if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการราคารวม'; return; }
-  const cost = kwh * (rate||0) * 1.07;
+  const cost = kwh * (rate||0);
   preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ราคารวมประมาณ <b>${cost.toFixed(2)} บาท (รวม VAT 7%)</b> (${rate||0} บาท/kWh)`;
 }
 
