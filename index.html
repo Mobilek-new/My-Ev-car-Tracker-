@@ -687,8 +687,8 @@ function updateDcPreview(){
   const rate = getDcRate();
   const preview = document.getElementById('dcPreview');
   if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการราคารวม'; return; }
-  const cost = kwh * (rate||0);
-  preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ราคารวมประมาณ <b>${cost.toFixed(2)} บาท</b> (${rate||0} บาท/kWh)`;
+  const cost = kwh * (rate||0) * 1.07;
+  preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ราคารวมประมาณ <b>${cost.toFixed(2)} บาท (รวม VAT 7%)</b> (${rate||0} บาท/kWh)`;
 }
 
 function saveRecord(){
