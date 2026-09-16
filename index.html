@@ -999,10 +999,10 @@ function updateMascotSpeech(){
   const count = recs.length;
   const avg = count ? (totalCost/count) : 0;
 
-  document.getElementById('sumTotalCost').textContent = totalCost.toFixed(2);
+  document.getElementById('sumTotalCost').textContent = formatMoney(totalCost);
   document.getElementById('sumCount').textContent = count;
-  document.getElementById('sumKwh').textContent = totalKwh.toFixed(2);
-  document.getElementById('sumAvg').textContent = avg.toFixed(2);
+  document.getElementById('sumKwh').textContent = formatMoney(totalKwh);
+  document.getElementById('sumAvg').textContent = formatMoney(avg);
 
   destroyCharts();
   const months = getMonthlyData(recs);
