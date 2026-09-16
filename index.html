@@ -706,7 +706,7 @@ function updateAcPreview(){
   const kwh = parseFloat(document.getElementById('acKwh').value);
   const rate = getAcRate();
   const preview = document.getElementById('acPreview');
-  if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการราคารวม'; return; }
+  if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการ kWh และค่าไฟ'; return; }
   const cost = kwh * (rate||0);
   preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)}</b> kWh &nbsp;&nbsp; 💰 ค่าไฟประมาณ <b>${cost.toFixed(2)}</b> บาท (รวม VAT 7%) (${rate||0} บาท/kWh)`;
 }
