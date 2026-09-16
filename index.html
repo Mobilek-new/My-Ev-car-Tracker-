@@ -325,6 +325,31 @@
   to{ opacity:1; transform:translateY(0); }
 }
 
+.user-greeting { color: white; font-size: 1.1rem; margin-bottom: 15px; }
+
+.car-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  background: transparent !important;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  margin: 0 auto;
+}
+
+.car-img { 
+  width: 100% !important; 
+  height: auto !important; /* แก้ตรงนี้ ลบเครื่องหมาย ; ที่เกินออก */
+  object-fit: contain; 
+}
+
+.car-info h2 { margin: 0; font-size: 1.5rem; }
+.car-info p { margin: 0; color: #666; }
+
+
+/* ------------------- 2. โค้ดมือถือ (ต้องไว้ล่างสุดเท่านั้น!) ------------------- */
 @media (max-width: 600px) {
   .mascot-box { justify-content: center; }
   .mascot-speech { max-width: 100%; text-align: center; }
@@ -336,37 +361,19 @@
   }
 
   .car-card {
-    flex-direction: column; /* เรียงบน-ล่าง */
-    gap: 10px !important;    /* ปรับระยะห่างให้แคบลงมาก */
+    flex-direction: column;
+    gap: 10px !important;
     padding: 10px;
     background: transparent !important;
     box-shadow: none !important;
   }
 
   .car-img {
-    max-width: 100% !important; 
+    width: 180px !important;   /* กำหนดตัวเลขตายตัวไปเลย จะคุมง่ายกว่า max-width */
+    max-width: 60% !important; /* กันไว้อีกชั้นสำหรับจอที่เล็กมากๆ */
     height: auto !important;
   }
 }
-
-.user-greeting { color: white; font-size: 1.1rem; margin-bottom: 15px; }
-
-.car-card {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  align-items: center;
-  background: transparent !important;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* ทำให้การ์ดดูลอยตัว */
-  margin: 0 auto;
-}
-
-.car-img { width: 100% !important; height: auto; !important; object-fit: contain; }
-.car-info h2 { margin: 0; font-size: 1.5rem; }
-.car-info p { margin: 0; color: #666; }
-  }
   
 </style>
 </head>
