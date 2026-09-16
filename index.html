@@ -749,7 +749,7 @@ function saveAcRecord(){
   recs.push({ id: Date.now(), type:'AC', date, station, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
   saveRecords(recs);
   alert('บันทึกการชาร์จ AC สำเร็จ ✅');
-  document.getElementById('dcDate').value=''; document.getElementById('dcStation').value=''; document.getElementById('dcKwh').value='';
+  document.getElementById('acDate').value=''; document.getElementById('acStation').value=''; document.getElementById('acKwh').value='';
   updateDcPreview();
 }
 function saveDcRecord(){
