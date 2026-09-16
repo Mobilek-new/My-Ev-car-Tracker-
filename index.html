@@ -739,14 +739,14 @@ function saveRecord(){
   else if(currentType==='DC') saveDcRecord();
 }
 function saveAcRecord(){
-  const date = document.getElementById('dcDate').value;
-  const station = document.getElementById('dcStation').value.trim();
-  const kwh = parseFloat(document.getElementById('dcKwh').value);
-  const rate = getDcRate();
+  const date = document.getElementById('acDate').value;
+  const station = document.getElementById('acStation').value.trim();
+  const kwh = parseFloat(document.getElementById('acKwh').value);
+  const rate = getacRate();
   if(!date || !station || isNaN(kwh) || kwh<=0 || !rate){ alert('กรุณากรอกวันที่ ชื่อสถานี จำนวน kWh และราคาต่อหน่วยให้ครบถ้วน'); return; }
   const cost = kwh * rate;
   const recs = getRecords();
-  recs.push({ id: Date.now(), type:'DC', date, station, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
+  recs.push({ id: Date.now(), type:'AC', date, station, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
   saveRecords(recs);
   alert('บันทึกการชาร์จ AC สำเร็จ ✅');
   document.getElementById('dcDate').value=''; document.getElementById('dcStation').value=''; document.getElementById('dcKwh').value='';
