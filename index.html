@@ -1086,7 +1086,7 @@ function renderHistory(){
   tbody.innerHTML = recs.map(r=>{
     const badge = r.type==='AC' ? '<span class="badge ac">AC</span>' : '<span class="badge dc">DC</span>';
     const kwh = r.kwh ?? '-';
-    return `<tr><td>${r.date}</td><td>${badge}</td><td>${detail}</td><td>${kwh}</td><td>${r.cost.toFixed(2)}</td>
+    return `<tr><td>${r.date}</td><td>${badge}</td><td>${r.station}</td><td>${kwh}</td><td>${r.cost.toFixed(2)}</td>
       <td><button class="btn danger" onclick="deleteRecord(${r.id})">ลบ</button></td></tr>`;
   }).join('');
 }
