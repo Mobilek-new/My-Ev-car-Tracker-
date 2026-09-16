@@ -169,7 +169,7 @@
   .summary-box.highlight .icon-circle{background:rgba(255,255,255,.25);}
 
   .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
-  @media(max-width:800px){.charts-grid{grid-template-columns:1fr;}}
+  @media(max-width:600px){.charts-grid{grid-template-columns:1fr;}}
 
   table{width:100%;border-collapse:collapse;font-size:14px;}
   th,td{padding:12px 10px;text-align:left;border-bottom:1px solid var(--border);}
@@ -344,7 +344,7 @@
   }
 
   .car-img {
-    width: 20px !important; /* ล็อกขนาดรูปรถในมือถือไม่ให้เกิน 200px */
+    max-width: 100% !important; 
     height: auto !important;
   }
 }
