@@ -696,8 +696,7 @@ acRateSelect.addEventListener('change', ()=>{
   document.getElementById('acCustomRateBox').style.display = acRateSelect.value==='custom' ? 'block':'none';
   updateAcPreview();
 });
-['acKwh','acCustomRate'].forEach(id=>{ document.getElementById(id).addEventListener('input', updateAcPreview); });
-function getAcRate(){
+document.getElementById('acKwh').addEventListener('input', updateAcPreview);
   const val = acRateSelect.value;
   if(val==='custom') return parseFloat(document.getElementById('acCustomRate').value) || 0;
   return parseFloat(val);
