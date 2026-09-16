@@ -740,7 +740,7 @@ function saveAcRecord(){
     const date = document.getElementById('acDate').value;
     const station = document.getElementById('acStation').value.trim();
     const kwh = parseFloat(document.getElementById('acKwh').value);
-    const rate = getAcRate(); // แก้ตรงนี้: เปลี่ยนเป็น getAcRate (ตัว A ใหญ่) ให้ตรงกับฟังก์ชันจริง
+    const rate = getAcRate();
     if(!date || !station || isNaN(kwh) || kwh<=0 || !rate){ alert('กรุณากรอกวันที่ ชื่อสถานี จำนวน kWh และราคาต่อหน่วยให้ครบถ้วน'); return; }
     const cost = kwh * rate;
     const recs = getRecords();
