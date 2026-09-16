@@ -474,8 +474,8 @@
       <div class="field-section" id="acFields">
         <div class="form-grid">
           <div><label>วันที่ชาร์จ</label><input type="date" id="acDate"></div>
-          <div><label>% เริ่มต้น</label><input type="number" id="acStart" min="0" max="100" placeholder="เช่น 20"></div>
-          <div><label>% สิ้นสุด</label><input type="number" id="acEnd" min="0" max="100" placeholder="เช่น 80"></div>
+          <div><label>ชื่อสถานีชาร์จ</label><input type="text" id="dcStation" placeholder="เช่น EA Anywhere, PEA VOLTA"></div>
+          <div><label>จำนวนไฟที่ชาร์จ (kWh)</label><input type="number" id="dcKwh" step="0.01" placeholder="เช่น 30"></div>
           <div>
             <label>ค่าไฟต่อหน่วย (บาท/kWh)</label>
             <select id="acRateSelect">
@@ -696,22 +696,19 @@ acRateSelect.addEventListener('change', ()=>{
   document.getElementById('acCustomRateBox').style.display = acRateSelect.value==='custom' ? 'block':'none';
   updateAcPreview();
 });
-['acStart','acEnd','acCustomRate'].forEach(id=>{ document.getElementById(id).addEventListener('input', updateAcPreview); });
+['acKwh','acCustomRate'].forEach(id=>{ document.getElementById(id).addEventListener('input', updateAcPreview); });
 function getAcRate(){
   const val = acRateSelect.value;
   if(val==='custom') return parseFloat(document.getElementById('acCustomRate').value) || 0;
   return parseFloat(val);
 }
 function updateAcPreview(){
-  const start = parseFloat(document.getElementById('acStart').value);
-  const end = parseFloat(document.getElementById('acEnd').value);
+  const kwh = parseFloat(document.getElementById('acKwh').value);
   const rate = getAcRate();
-  const capacity = getSettings().capacity;
   const preview = document.getElementById('acPreview');
-  if(isNaN(start) || isNaN(end) || end<=start){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการ kWh และค่าไฟ'; return; }
-  const kwh = (end-start)/100 * capacity;
+  if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการราคารวม'; return; }
   const cost = kwh * (rate||0);
-  preview.innerHTML = `⚡ ชาร์จได้ประมาณ <b>${kwh.toFixed(2)} kWh</b> &nbsp;|&nbsp; 💰 ค่าไฟประมาณ <b><b>${cost.toFixed(2)} บาท (รวม VAT 7%)</b> (${rate||0} บาท/kWh)`;
+  preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)}</b> kWh &nbsp;&nbsp; 💰 ค่าไฟประมาณ <b>${cost.toFixed(2)}</b> บาท (รวม VAT 7%) (${rate||0} บาท/kWh)`;
 }
 
 const dcRateSelect = document.getElementById('dcRateSelect');
@@ -739,18 +736,20 @@ function saveRecord(){
   else if(currentType==='DC') saveDcRecord();
 }
 function saveAcRecord(){
-  const date = document.getElementById('acDate').value;
-  const station = document.getElementById('acStation').value.trim();
-  const kwh = parseFloat(document.getElementById('acKwh').value);
-  const rate = getacRate();
-  if(!date || !station || isNaN(kwh) || kwh<=0 || !rate){ alert('กรุณากรอกวันที่ ชื่อสถานี จำนวน kWh และราคาต่อหน่วยให้ครบถ้วน'); return; }
-  const cost = kwh * rate;
-  const recs = getRecords();
-  recs.push({ id: Date.now(), type:'AC', date, station, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
-  saveRecords(recs);
-  alert('บันทึกการชาร์จ AC สำเร็จ ✅');
-  document.getElementById('acDate').value=''; document.getElementById('acStation').value=''; document.getElementById('acKwh').value='';
-  updateDcPreview();
+    const date = document.getElementById('acDate').value;
+    const station = document.getElementById('acStation').value.trim();
+    const kwh = parseFloat(document.getElementById('acKwh').value);
+    const rate = getAcRate(); // แก้ตรงนี้: เปลี่ยนเป็น getAcRate (ตัว A ใหญ่) ให้ตรงกับฟังก์ชันจริง
+    if(!date || !station || isNaN(kwh) || kwh<=0 || !rate){ alert('กรุณากรอกวันที่ ชื่อสถานี จำนวน kWh และราคาต่อหน่วยให้ครบถ้วน'); return; }
+    const cost = kwh * rate;
+    const recs = getRecords();
+    recs.push({ id: Date.now(), type:'AC', date, station, rate, kwh:+kwh.toFixed(2), cost:+cost.toFixed(2) });
+    saveRecords(recs);
+    alert('บันทึกการชาร์จ AC สำเร็จ ✅');
+    document.getElementById('acDate').value=''; 
+    document.getElementById('acStation').value=''; 
+    document.getElementById('acKwh').value='';
+    updateAcPreview();
 }
 function saveDcRecord(){
   const date = document.getElementById('dcDate').value;
