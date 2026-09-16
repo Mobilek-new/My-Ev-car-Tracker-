@@ -697,7 +697,6 @@ acRateSelect.addEventListener('change', ()=>{
   updateAcPreview();
 });
 document.getElementById('acKwh').addEventListener('input', updateAcPreview);
-
 function getAcRate(){
   const val = acRateSelect.value;
   if(val==='custom') return parseFloat(document.getElementById('acCustomRate').value) || 0;
