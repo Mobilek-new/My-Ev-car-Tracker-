@@ -697,10 +697,13 @@ acRateSelect.addEventListener('change', ()=>{
   updateAcPreview();
 });
 document.getElementById('acKwh').addEventListener('input', updateAcPreview);
+
+function getAcRate(){
   const val = acRateSelect.value;
   if(val==='custom') return parseFloat(document.getElementById('acCustomRate').value) || 0;
   return parseFloat(val);
 }
+
 function updateAcPreview(){
   const kwh = parseFloat(document.getElementById('acKwh').value);
   const rate = getAcRate();
