@@ -696,7 +696,7 @@ acRateSelect.addEventListener('change', ()=>{
   document.getElementById('acCustomRateBox').style.display = acRateSelect.value==='custom' ? 'block':'none';
   updateAcPreview();
 });
-document.getElementById('acKwh').addEventListener('input', updateAcPreview);
+['acKwh','acCustomRate'].forEach(id=>{ document.getElementById(id).addEventListener('input', updateAcPreview); });
 function getAcRate(){
   const val = acRateSelect.value;
   if(val==='custom') return parseFloat(document.getElementById('acCustomRate').value) || 0;
@@ -709,7 +709,7 @@ function updateAcPreview(){
   const preview = document.getElementById('acPreview');
   if(isNaN(kwh) || kwh<=0){ preview.innerHTML = 'กรอกข้อมูลเพื่อดูค่าประมาณการ kWh และค่าไฟ'; return; }
   const cost = kwh * (rate||0);
-  preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)}</b> kWh &nbsp;&nbsp; 💰 ค่าไฟประมาณ <b>${cost.toFixed(2)}</b> บาท (รวม VAT 7%) (${rate||0} บาท/kWh)`;
+  preview.innerHTML = `⚡ ชาร์จ <b>${kwh.toFixed(2)}</b> kWh &nbsp;&nbsp; 💰 ค่าไฟประมาณ <b>${cost.toFixed(2)} บาท (รวม VAT 7%) (${rate||0} บาท/kWh)`;
 }
 
 const dcRateSelect = document.getElementById('dcRateSelect');
